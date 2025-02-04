@@ -11,7 +11,8 @@ const app = express();
 
 // Serve uploaded files statically
 app.use("/uploads", express.static("uploads"));
-
+// app.use(bodyParser.json())
+app.use(express.json())
 // Ensure the uploads directory exists
 if (!fs.existsSync("./uploads")) {
   fs.mkdirSync("./uploads");
@@ -38,22 +39,22 @@ const Schema = new mongoose.Schema({
   name: String,
   email: String,
   message: String,
-  imageURL: String,
+  // imageURL: String,
 });
 
 const User = mongoose.model("User", Schema);
 
 // Create User
-app.post("/create", upload.single("imageURL"), async (req, res) => {
+app.post("/create", async (req, res) => {
   try {
     const { name, email, message } = req.body;
-    const imageURL = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : null;
-    console.log("Body:", req.body);
-    console.log("File:", req.file);
+      // const imageURL = req.file
+      //   ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+      //   : null;
+      console.log("Body:", req.body);
+      // console.log("File:", req.file);
 
-    const savedUser = new User({ name, email, message, imageURL });
+    const savedUser = new User({ name, email, message });
     const newUser = await savedUser.save();
 
     res.json({
